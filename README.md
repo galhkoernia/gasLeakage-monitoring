@@ -7,16 +7,15 @@ The system has two operational paths:
 1. Local safety path — ESP32 evaluates the sensor state and drives the local LED/buzzer alarm.
 2. Monitoring path — ESP32 telemetry is intended to be transmitted to a backend and visualized through a web dashboard.
 
-The current development phase focuses exclusively on the **frontend monitoring application**.
+The current development phase connects the dashboard to a local FastAPI backend. Device and telemetry state remains in memory.
 
 ## Project Status
 
-**Current phase:** Frontend implementation  
-**Current data source:** Local mock data  
-**Hardware integration:** Not implemented in the frontend phase  
-**Backend integration:** Not implemented in the frontend phase
+**Current phase:** Local frontend/backend integration
+**Current data source:** FastAPI for devices and telemetry; temporary mock data for alarms
+**Hardware integration:** ESP32 firmware integration is a later step
 
-The frontend is intentionally designed to be API-ready so that the mock data layer can later be replaced by a FastAPI backend without requiring major UI restructuring.
+The dashboard reads devices and telemetry from FastAPI. The backend uses in-memory storage; data is lost when the process stops.
 
 ## Product Goal
 
@@ -48,16 +47,14 @@ Local hardware alarms remain independent of the web application.
 - Lucide React
 - Apache ECharts
 
-### Planned backend
+### Backend
 
 - Python
 - FastAPI
 - Pydantic
-- SQLAlchemy
-- PostgreSQL
-- Alembic
+- In-memory device and telemetry state
 
-### Planned communication
+### Communication
 
 ESP32 → Backend:
 
@@ -66,9 +63,9 @@ ESP32 → Backend:
 Backend → Frontend:
 
 - REST/JSON
-- SSE for realtime telemetry where appropriate
+- Frontend polls REST endpoints every 2 seconds
 
-These backend and hardware components are future scope and must not be implemented during the current frontend-only phase.
+ESP32 firmware integration and persistent storage remain future scope.
 
 ## Repository Structure
 
@@ -104,7 +101,16 @@ The frontend currently provides:
 - Settings
 - About
 
-All displayed data is mock data.
+Device and telemetry views use the backend API. Alarm events remain temporary mock data until an alarm endpoint is added.
+
+## Local Development
+
+- Frontend: `http://localhost:5173` (`cd frontend && npm run dev`)
+- Backend/API: `http://localhost:8000` and `http://localhost:8000/api/v1`
+- Copy `frontend/.env.example` to `frontend/.env.local` to configure the API URL.
+- From `backend/`, run `uvicorn app.main:app --host 0.0.0.0 --port 8000` for LAN access.
+- Set frontend `VITE_API_BASE_URL` when the backend is reached at a different host, for example `http://192.168.1.10:8000`.
+- ESP32 will later POST MQ-2 telemetry to `/api/v1/telemetry` over the local LAN.
 
 The mock data must be isolated from presentation components.
 

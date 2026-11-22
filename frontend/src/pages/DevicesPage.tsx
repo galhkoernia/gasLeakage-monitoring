@@ -49,7 +49,7 @@ export function DevicesPage() {
                 <dd className="text-right font-medium">{d.sensor}</dd>
                 <dt className="text-slate-500">Last seen</dt>
                 <dd className="text-right font-medium">
-                  {fmtAgo(now - d.lastSeenAt)}
+                  {d.lastSeenAt ? fmtAgo(now - d.lastSeenAt) : "Never"}
                 </dd>
               </dl>
             </Card>

@@ -40,7 +40,9 @@ export function GasStatusCard({ deviceId }: Props) {
             <p className="mt-2 text-slate-600">{m.description}</p>
             <p className="text-xs text-slate-500">
               {r.status === "OFFLINE"
-                ? `Last seen ${fmtAgo(now - (g.device?.lastSeenAt ?? now))}`
+                ? g.device?.lastSeenAt
+                  ? `Last seen ${fmtAgo(now - g.device.lastSeenAt)}`
+                  : "No telemetry received"
                 : `Updated ${fmtAgo(now - r.updatedAt)}`}
             </p>
           </>
@@ -109,7 +111,9 @@ export function DeviceStatusCard({ deviceId }: Props) {
             </p>
             <p className="mt-2 font-medium">{d.id}</p>
             <p className="text-sm text-slate-500">
-              Last seen {fmtAgo(now - d.lastSeenAt)}
+              {d.lastSeenAt
+                ? `Last seen ${fmtAgo(now - d.lastSeenAt)}`
+                : "No telemetry received"}
             </p>
           </>
         )}

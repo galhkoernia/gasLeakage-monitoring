@@ -28,8 +28,8 @@ export function buildTelemetry(
   now = Date.now(),
 ): TelemetryPoint[] {
   const { ms, stepMs } = RANGES[range];
-  const end = device.online ? now : device.lastSeenAt;
-  const anchor = device.online ? APP_START : device.lastSeenAt;
+  const end = device.online ? now : device.lastSeenAt ?? now;
+  const anchor = device.online ? APP_START : device.lastSeenAt ?? now;
   const points: TelemetryPoint[] = [];
   for (let t = end - ms; t <= end; t += stepMs) {
     points.push({ t, value: valueAt((anchor - t) / 60_000, t) });

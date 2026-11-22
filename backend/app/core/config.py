@@ -3,7 +3,9 @@ from dataclasses import dataclass
 
 
 def _read_origins() -> tuple[str, ...]:
-    configured = os.getenv("CORS_ORIGINS", "http://localhost:5173")
+    configured = os.getenv(
+        "CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173"
+    )
     return tuple(origin.strip() for origin in configured.split(",") if origin.strip())
 
 

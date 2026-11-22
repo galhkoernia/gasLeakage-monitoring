@@ -27,7 +27,12 @@ export function useGasStatus(deviceId: string) {
     const last = points[points.length - 1];
     reading = {
       value: last.value,
-      status: resolveStatus(last.value, settings, online),
+      status:
+        last.gasStatus === 1
+          ? "DANGER"
+          : last.gasStatus === 0
+            ? "NORMAL"
+            : resolveStatus(last.value, settings, online),
       deltaPct: first ? ((last.value - first) / first) * 100 : 0,
       updatedAt: telemetry.dataUpdatedAt,
     };

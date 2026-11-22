@@ -6,15 +6,16 @@ export interface Device {
   name: string;
   sensor: string;
   online: boolean;
-  wifiConnected: boolean;
-  rssi: number;
-  bootedAt: number;
-  lastSeenAt: number;
-  samplingMs: number;
+  wifiConnected?: boolean;
+  rssi?: number;
+  bootedAt?: number;
+  lastSeenAt?: number;
+  samplingMs?: number;
 }
 export interface TelemetryPoint {
   t: number;
   value: number;
+  gasStatus?: 0 | 1;
 }
 export interface AlarmEvent {
   id: string;

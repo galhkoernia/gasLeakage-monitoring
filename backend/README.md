@@ -28,6 +28,18 @@ From `backend/`:
 uvicorn app.main:app --reload
 ```
 
+To make the API reachable by an ESP32 on the same LAN, run instead:
+
+```bash
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+```
+
+The local frontend runs at `http://localhost:5173`; the API base is
+`http://localhost:8000/api/v1`. For browser access from another LAN origin,
+set `CORS_ORIGINS` to that frontend origin. ESP32 can later POST JSON telemetry
+to `/api/v1/telemetry` using the computer's LAN IP. Telemetry and device state
+remain in memory and are cleared when the backend restarts.
+
 Interactive API documentation is at `http://localhost:8000/docs`; ReDoc is at `http://localhost:8000/redoc`.
 
 ## Tests

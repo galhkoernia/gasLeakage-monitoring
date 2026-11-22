@@ -24,14 +24,16 @@ export function DeviceInfoCard({
         ["Connection", <Presence ok={d.online} on="Online" off="Offline" />],
         [
           "Wi-Fi",
-          <Presence
-            ok={d.wifiConnected}
-            on={`Connected (${d.rssi} dBm)`}
-            off="Disconnected"
-          />,
+          d.wifiConnected === undefined ? "Unavailable" : (
+            <Presence
+              ok={d.wifiConnected}
+              on={`Connected${d.rssi === undefined ? "" : ` (${d.rssi} dBm)`}`}
+              off="Disconnected"
+            />
+          ),
         ],
-        ["Uptime", d.online ? fmtDuration(now - d.bootedAt) : "—"],
-        ["Sampling Interval", `${fmtNumber(d.samplingMs)} ms`],
+        ["Uptime", d.online && d.bootedAt ? fmtDuration(now - d.bootedAt) : "—"],
+        ["Sampling Interval", d.samplingMs === undefined ? "Unavailable" : `${fmtNumber(d.samplingMs)} ms`],
       ]
     : [];
   return (

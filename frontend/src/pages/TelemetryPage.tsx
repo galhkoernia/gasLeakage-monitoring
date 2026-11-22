@@ -103,7 +103,13 @@ export function TelemetryPage() {
                       </td>
                       <td className="py-2 pl-6">
                         <StatusBadge
-                          status={resolveStatus(p.value, settings, online)}
+                          status={
+                            p.gasStatus === 1
+                              ? "DANGER"
+                              : p.gasStatus === 0
+                                ? "NORMAL"
+                                : resolveStatus(p.value, settings, online)
+                          }
                         />
                       </td>
                     </tr>

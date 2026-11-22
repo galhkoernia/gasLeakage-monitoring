@@ -60,14 +60,18 @@ export function DeviceDetailPage() {
               <Card>
                 <p className="text-slate-500">Wi-Fi</p>
                 <p className="text-lg font-semibold">
-                  {d.wifiConnected ? "Connected" : "Disconnected"}
+                  {d.wifiConnected === undefined
+                    ? "Unavailable"
+                    : d.wifiConnected
+                      ? "Connected"
+                      : "Disconnected"}
                 </p>
               </Card>
               <GasStatusCard deviceId={d.id} />
               <GasLevelCard deviceId={d.id} />
             </div>
             <p className="mt-3 text-sm text-slate-500">
-              Uptime {d.online ? fmtDuration(now - d.bootedAt) : "—"}
+              Uptime {d.online && d.bootedAt ? fmtDuration(now - d.bootedAt) : "—"}
             </p>
             <div className="mt-4">
               <TelemetryPanel deviceId={d.id} />

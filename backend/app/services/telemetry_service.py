@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from app.schemas.device import Device
 from app.schemas.telemetry import Telemetry
 
@@ -10,7 +12,7 @@ class TelemetryService:
             "GAS-001": Device(
                 device_id="GAS-001",
                 name="Gas Monitor 001",
-                status="online",
+                status="offline",
             )
         }
         self._telemetry: dict[str, list[Telemetry]] = {}
@@ -22,6 +24,16 @@ class TelemetryService:
         return self._devices.get(device_id)
 
     def record_telemetry(self, telemetry: Telemetry) -> Telemetry:
+        device = self._devices.get(telemetry.device_id)
+        if device is None:
+            device = Device(
+                device_id=telemetry.device_id,
+                name=telemetry.device_id,
+                status="online",
+            )
+        self._devices[telemetry.device_id] = device.model_copy(
+            update={"status": "online", "last_seen": datetime.now(timezone.utc)}
+        )
         self._telemetry.setdefault(telemetry.device_id, []).append(telemetry)
         return telemetry
 
