@@ -387,4 +387,10 @@ Read the following documents before making architectural changes:
 
 **Galuh Kurnia Pratama**
 
-Physics student focused on embedded systems, instrumentation, software engineering, and technical research.
+Physics Student · Instrumentation · Software Engineering Entusiast
+
+Building practical systems through the integration of **physics, electronics, software, and engineering**.
+
+---
+
+© 2026 Galuh Kurnia Pratama. All rights reserved.
