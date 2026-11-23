@@ -87,6 +87,11 @@ export async function fetchTelemetry(
     .reverse();
 }
 
+/** Download the accumulated backend telemetry CSV. */
+export function downloadTelemetryCsv(): void {
+  window.location.assign(`${API_BASE_URL}${API_PREFIX}/telemetry/export`);
+}
+
 /** TODO: replace this temporary mock when the backend alarm endpoint is implemented. */
 export async function fetchAlarms(deviceId?: string): Promise<AlarmEvent[]> {
   return mockAlarmEvents.filter((event) => !deviceId || event.deviceId === deviceId);

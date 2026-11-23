@@ -10,6 +10,7 @@ import { DEFAULT_DEVICE_ID } from "../utils/constants";
 import { fmtNumber, fmtTime } from "../utils/format";
 import { resolveStatus } from "../utils/status";
 import { StatusBadge } from "../components/ui/StatusBadge";
+import { downloadTelemetryCsv } from "../lib/api";
 
 export function TelemetryPage() {
   const [deviceId, setDeviceId] = useState(DEFAULT_DEVICE_ID);
@@ -35,6 +36,13 @@ export function TelemetryPage() {
         subtitle="MQ-2 raw sensor readings (ADC)"
         right={
           <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              onClick={downloadTelemetryCsv}
+              className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            >
+              Download CSV
+            </button>
             <label className="flex items-center gap-2 text-sm text-slate-600">
               Device
               <select

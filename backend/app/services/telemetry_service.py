@@ -1,4 +1,8 @@
+import csv
 from datetime import datetime, timezone
+from pathlib import Path
+
+from app.core.config import settings
 
 from app.schemas.device import Device
 from app.schemas.telemetry import Telemetry
@@ -8,6 +12,7 @@ class TelemetryService:
     """Owns the temporary in-memory device and telemetry state."""
 
     def __init__(self) -> None:
+        self._csv_path = settings.telemetry_csv_path
         self._devices: dict[str, Device] = {
             "GAS-001": Device(
                 device_id="GAS-001",
@@ -24,6 +29,7 @@ class TelemetryService:
         return self._devices.get(device_id)
 
     def record_telemetry(self, telemetry: Telemetry) -> Telemetry:
+        self._append_csv(telemetry)
         device = self._devices.get(telemetry.device_id)
         if device is None:
             device = Device(
@@ -36,6 +42,21 @@ class TelemetryService:
         )
         self._telemetry.setdefault(telemetry.device_id, []).append(telemetry)
         return telemetry
+
+    def _append_csv(self, telemetry: Telemetry) -> None:
+        self._csv_path.parent.mkdir(parents=True, exist_ok=True)
+        write_header = not self._csv_path.exists() or self._csv_path.stat().st_size == 0
+        with self._csv_path.open("a", newline="", encoding="utf-8") as csv_file:
+            writer = csv.DictWriter(
+                csv_file,
+                fieldnames=("device_id", "sensor", "value", "gas_status", "timestamp"),
+            )
+            if write_header:
+                writer.writeheader()
+            writer.writerow(telemetry.model_dump(mode="json"))
+
+    def get_csv_path(self) -> Path:
+        return self._csv_path
 
     def get_latest_telemetry(self, device_id: str) -> Telemetry | None:
         records = self._telemetry.get(device_id, [])
